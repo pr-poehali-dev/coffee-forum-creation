@@ -42,11 +42,40 @@ const Index = () => {
     }
   ];
 
+  const getRoleBadge = (role: string) => {
+    switch (role) {
+      case 'Эксперт':
+        return {
+          color: 'bg-amber-500 text-white',
+          icon: 'Crown',
+          privileges: ['Модерация', 'Эксклюзивные рецепты', 'Мастер-классы']
+        };
+      case 'Бариста':
+        return {
+          color: 'bg-orange-500 text-white',
+          icon: 'Award',
+          privileges: ['Публикация рецептов', 'Оценка рецептов', 'Консультации']
+        };
+      case 'Новичок':
+        return {
+          color: 'bg-green-500 text-white',
+          icon: 'Sprout',
+          privileges: ['Чтение рецептов', 'Базовые форумы', 'Обучение']
+        };
+      default:
+        return {
+          color: 'bg-gray-500 text-white',
+          icon: 'User',
+          privileges: []
+        };
+    }
+  };
+
   const topUsers = [
-    { name: 'КофеГуру', level: 'Мастер-Бариста', rating: 4.9, recipes: 47, avatar: 'КГ' },
-    { name: 'МиланоМастер', level: 'Эксперт', rating: 4.8, recipes: 32, avatar: 'ММ' },
-    { name: 'ЛетнийКофе', level: 'Любитель', rating: 4.7, recipes: 18, avatar: 'ЛК' },
-    { name: 'АртКофе', level: 'Новичок', rating: 4.5, recipes: 12, avatar: 'АК' }
+    { name: 'КофеГуру', role: 'Эксперт', rating: 4.9, recipes: 47, avatar: 'КГ', experience: '3 года' },
+    { name: 'МиланоМастер', role: 'Бариста', rating: 4.8, recipes: 32, avatar: 'ММ', experience: '2 года' },
+    { name: 'ЛетнийКофе', role: 'Бариста', rating: 4.7, recipes: 18, avatar: 'ЛК', experience: '1 год' },
+    { name: 'АртКофе', role: 'Новичок', rating: 4.5, recipes: 12, avatar: 'АК', experience: '6 мес' }
   ];
 
   const forumPosts = [
@@ -274,21 +303,41 @@ const Index = () => {
                               </Badge>
                             </div>
                           )}
+                          <div className="absolute -bottom-1 -right-1">
+                            <div className={`rounded-full p-1 ${getRoleBadge(user.role).color}`}>
+                              <Icon name={getRoleBadge(user.role).icon} size={12} />
+                            </div>
+                          </div>
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-1">
-                            <h4 className="font-semibold text-lg">{user.name}</h4>
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-semibold text-lg">{user.name}</h4>
+                              <Badge className={getRoleBadge(user.role).color}>
+                                {user.role}
+                              </Badge>
+                            </div>
                             <div className="flex items-center gap-1">
                               {renderStars(user.rating)}
                               <span className="text-sm font-medium ml-1">{user.rating}</span>
                             </div>
                           </div>
-                          <p className="text-muted-foreground mb-2">{user.level}</p>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
                             <span className="flex items-center gap-1">
                               <Icon name="BookOpen" size={14} />
                               {user.recipes} рецептов
                             </span>
+                            <span className="flex items-center gap-1">
+                              <Icon name="Calendar" size={14} />
+                              {user.experience}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {getRoleBadge(user.role).privileges.slice(0, 2).map((privilege, idx) => (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {privilege}
+                              </Badge>
+                            ))}
                           </div>
                         </div>
                       </div>
