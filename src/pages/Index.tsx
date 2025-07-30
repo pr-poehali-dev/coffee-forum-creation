@@ -72,10 +72,37 @@ const Index = () => {
   };
 
   const topUsers = [
-    { name: 'КофеГуру', role: 'Эксперт', rating: 4.9, recipes: 47, avatar: 'КГ', experience: '3 года' },
-    { name: 'МиланоМастер', role: 'Бариста', rating: 4.8, recipes: 32, avatar: 'ММ', experience: '2 года' },
-    { name: 'ЛетнийКофе', role: 'Бариста', rating: 4.7, recipes: 18, avatar: 'ЛК', experience: '1 год' },
-    { name: 'АртКофе', role: 'Новичок', rating: 4.5, recipes: 12, avatar: 'АК', experience: '6 мес' }
+    { name: 'КофеГуру', role: 'Эксперт', rating: 4.9, recipes: 47, avatar: 'КГ', experience: '3 года', coffeeBeans: 2847 },
+    { name: 'МиланоМастер', role: 'Бариста', rating: 4.8, recipes: 32, avatar: 'ММ', experience: '2 года', coffeeBeans: 1923 },
+    { name: 'ЛетнийКофе', role: 'Бариста', rating: 4.7, recipes: 18, avatar: 'ЛК', experience: '1 год', coffeeBeans: 1456 },
+    { name: 'АртКофе', role: 'Новичок', rating: 4.5, recipes: 12, avatar: 'АК', experience: '6 мес', coffeeBeans: 342 }
+  ];
+
+  const premiumShop = [
+    {
+      id: 1,
+      title: 'Эксклюзивный рецепт Эспрессо Романо',
+      description: 'Секретный рецепт от итальянского мастера',
+      price: 150,
+      category: 'Рецепт',
+      rarity: 'Редкий'
+    },
+    {
+      id: 2,
+      title: 'Персональная консультация бариста',
+      description: '30 минут индивидуального обучения',
+      price: 300,
+      category: 'Обучение',
+      rarity: 'Эпический'
+    },
+    {
+      id: 3,
+      title: 'Набор профессиональных темплейтов',
+      description: 'Шаблоны для создания кофейных рецептов',
+      price: 75,
+      category: 'Инструменты',
+      rarity: 'Обычный'
+    }
   ];
 
   const forumPosts = [
@@ -195,10 +222,11 @@ const Index = () => {
       <section className="py-12 px-4">
         <div className="container mx-auto">
           <Tabs defaultValue="recipes" className="space-y-8">
-            <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto">
+            <TabsList className="grid w-full grid-cols-4 max-w-2xl mx-auto">
               <TabsTrigger value="recipes">Рецепты</TabsTrigger>
               <TabsTrigger value="forum">Форум</TabsTrigger>
               <TabsTrigger value="ratings">Рейтинги</TabsTrigger>
+              <TabsTrigger value="shop">Магазин</TabsTrigger>
             </TabsList>
 
             {/* Top Recipes */}
@@ -332,6 +360,12 @@ const Index = () => {
                               {user.experience}
                             </span>
                           </div>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-1 text-amber-600 font-medium">
+                              <span className="text-lg">☕</span>
+                              <span>{user.coffeeBeans.toLocaleString()} бобов</span>
+                            </div>
+                          </div>
                           <div className="flex flex-wrap gap-1">
                             {getRoleBadge(user.role).privileges.slice(0, 2).map((privilege, idx) => (
                               <Badge key={idx} variant="outline" className="text-xs">
@@ -346,6 +380,84 @@ const Index = () => {
                 ))}
               </div>
             </TabsContent>
+
+            {/* Shop Section */}
+            <TabsContent value="shop" className="space-y-6">
+              <div className="text-center mb-8">
+                <h3 className="text-3xl font-bold text-primary mb-2">Магазин премиум-контента</h3>
+                <p className="text-muted-foreground">Используйте кофе-бобы для покупки эксклюзивного контента</p>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {premiumShop.map((item) => (
+                  <Card key={item.id} className="hover:shadow-lg transition-all duration-300 border-accent/20">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <Badge 
+                            className={`mb-2 ${
+                              item.rarity === 'Эпический' ? 'bg-purple-500 text-white' :
+                              item.rarity === 'Редкий' ? 'bg-blue-500 text-white' :
+                              'bg-gray-500 text-white'
+                            }`}
+                          >
+                            {item.rarity}
+                          </Badge>
+                          <CardTitle className="text-lg">{item.title}</CardTitle>
+                          <p className="text-sm text-muted-foreground">{item.category}</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-amber-600 font-bold">
+                          <span className="text-xl">☕</span>
+                          <span>{item.price} бобов</span>
+                        </div>
+                        <Button size="sm" className="bg-amber-600 hover:bg-amber-700">
+                          <Icon name="ShoppingCart" size={16} className="mr-2" />
+                          Купить
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              
+              {/* Currency Info */}
+              <div className="mt-8 p-6 bg-accent/5 rounded-lg border border-accent/20">
+                <h4 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                  <span className="text-2xl">☕</span>
+                  Как заработать кофе-бобы?
+                </h4>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Icon name="Plus" size={16} className="text-green-500" />
+                    <span>+50 за новый рецепт</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon name="Plus" size={16} className="text-green-500" />
+                    <span>+25 за полезный комментарий</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon name="Plus" size={16} className="text-green-500" />
+                    <span>+10 за ежедневный вход</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon name="Plus" size={16} className="text-green-500" />
+                    <span>+100 за рецепт месяца</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon name="Plus" size={16} className="text-green-500" />
+                    <span>+15 за оценку рецепта</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon name="Plus" size={16} className="text-green-500" />
+                    <span>+5 за лайк поста</span>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
       </section>
@@ -353,7 +465,7 @@ const Index = () => {
       {/* Stats Section */}
       <section className="py-12 bg-accent/10">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
             <div>
               <div className="text-3xl font-bold text-primary mb-2">1,247</div>
               <div className="text-muted-foreground">Участников</div>
@@ -369,6 +481,13 @@ const Index = () => {
             <div>
               <div className="text-3xl font-bold text-primary mb-2">4.8</div>
               <div className="text-muted-foreground">Средний рейтинг</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-amber-600 mb-2 flex items-center justify-center gap-1">
+                <span className="text-2xl">☕</span>
+                47.2K
+              </div>
+              <div className="text-muted-foreground">Кофе-бобов в обороте</div>
             </div>
           </div>
         </div>
